@@ -1,1 +1,8 @@
+This section contains the mechanical and electronic hardware resources for the UI Jackal II.
 
+## Contents
+- **CAD Models** – 3D designs (STEP, STL) for replication and modification  
+- **Bill of Materials (BOM)** – complete list of components with specifications and costs  
+- **Wiring Diagrams** – electronics schematics for motor drivers, sensors, and controllers  
+
+These resources ensure the UI Jackal II remains affordable, modular, and replicable in resource-limited settings.
