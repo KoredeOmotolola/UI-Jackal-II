@@ -5,48 +5,48 @@ The UI Jackal II is a low-cost, modular quadruped robot designed for research in
 
 While quadruped robotics research has advanced in North America, Europe, and Asia, many institutions in Africa face financial and resource barriers. The UI Jackal II seeks to empower these institutions by providing:
 
-An affordable, replicable platform for research
+1. An affordable, replicable platform for research
 
-Hands-on opportunities in dynamic locomotion and robotics
+2. Hands-on opportunities in dynamic locomotion and robotics
 
-A foundation for local innovation and contribution to global robotics
+3. A foundation for local innovation and contribution to global robotics
 
 🛠 Problem Statement
 
 Challenges addressed by UI Jackal II include:
 
-High cost of advanced legged robots (e.g., MIT Cheetah, Boston Dynamics Spot)
+1. High cost of advanced legged robots (e.g., MIT Cheetah, Boston Dynamics Spot)
 
-Lack of accessible quadruped platforms in Africa
+2. Lack of accessible quadruped platforms in Africa
 
-Limited documentation, CAD designs, and electronics implementation in previous efforts (UI Jackal I)
+3. Limited documentation, CAD designs, and electronics implementation in previous efforts (UI Jackal I)
 
 🎯 Objectives
 
-Affordable Design (< $1000): Off-the-shelf components to reduce costs
+1. Affordable Design (< $1000): Off-the-shelf components to reduce costs
 
-Heavy Payload Delivery: Transport loads across difficult terrains
+2. Heavy Payload Delivery: Transport loads across difficult terrains
 
-Autonomous Navigation: Gather accurate topographic data in unstructured environments
+3. Autonomous Navigation: Gather accurate topographic data in unstructured environments
 
-Modularity & Scalability: Easily upgradeable and adaptable for various research needs
+4. Modularity & Scalability: Easily upgradeable and adaptable for various research needs
 
 🏗 Design Philosophy
 
-Modular: Easy to customize and upgrade
+1. Modular: Easy to customize and upgrade
 
-Lightweight: Simple to deploy and maintain
+2. Lightweight: Simple to deploy and maintain
 
-Mechanically Robust: Durable for rough terrains and extreme conditions
+3. Mechanically Robust: Durable for rough terrains and extreme conditions
 
-Affordable: Enables research in resource-limited environments without sacrificing functionality
+4. Affordable: Enables research in resource-limited environments without sacrificing functionality
 
 🔧 Key Features
 
-Quadruped locomotion for unstructured terrains
+1. Quadruped locomotion for unstructured terrains
 
-Low-cost, off-the-shelf components
+2. Low-cost, off-the-shelf components
 
-Platform for experimentation in robotics and AI
+3. Platform for experimentation in robotics and AI
 
-Designed to be replicable and extensible
+4. Designed to be replicable and extensible
