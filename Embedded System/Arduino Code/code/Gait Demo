@@ -1,0 +1,593 @@
+#include <Wire.h> 
+
+#include <Adafruit_PWMServoDriver.h> 
+
+ 
+
+Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(); 
+
+ 
+
+#define SERVOMIN  300 
+
+#define SERVOMAX  400 
+
+ 
+
+#define USMIN  800  
+
+#define USMAX  2200 
+
+#define SERVO_FREQ 50 
+
+ 
+
+//////SERVOS////// 
+
+uint8_t ABAD1 = 0; 
+
+uint8_t HIP1  = 1; 
+
+uint8_t KNEE1 = 2; 
+
+ 
+
+uint8_t ABAD2 = 4; 
+
+uint8_t HIP2  = 5; 
+
+uint8_t KNEE2 = 6; 
+
+ 
+
+uint8_t ABAD3 = 8; 
+
+uint8_t HIP3  = 9; 
+
+uint8_t KNEE3 = 10; 
+
+ 
+
+uint8_t ABAD4 = 12; 
+
+uint8_t HIP4  = 13; 
+
+uint8_t KNEE4 = 14; 
+
+ 
+
+ 
+
+//HOME POSITIONS IN MICROSECONDS - TABLE TOP STANCE 
+
+#define abhome1   1600    //+CW -ACW 
+
+#define hiphome1  1330     //+CW -ACW 
+
+#define kneehome1 1500     //+CW -ACW 
+
+ 
+
+#define abhome2   1370     //+CW -ACW 
+
+#define hiphome2  1600     //+ACW  -CW 
+
+#define kneehome2 1400     //+CW  -ACW 
+
+ 
+
+#define abhome3   1380     //+ACW  -CW 
+
+#define hiphome3  1430     //+CW -ACW 
+
+#define kneehome3 1500     //+CW -ACW 
+
+ 
+
+#define abhome4   1500     //+ACW  -CW 
+
+#define hiphome4  1420     //+ACW  -CW 
+
+#define kneehome4 1380     //+ACW  -CW 
+
+ 
+
+int h_delay = 500; 
+
+int p_prompt; 
+
+int _DEGTOMS_ = 7.407;   //Degree to microsecond conversion factor (1000ms = 135deg). 1 deg = 7.407ms 
+
+ 
+
+ 
+
+void setup() { 
+
+  Serial.begin(9600); 
+
+  pwm.begin(); 
+
+  pwm.setOscillatorFrequency(27000000); 
+
+  pwm.setPWMFreq(SERVO_FREQ);  // Analog servos run at ~50 Hz updates 
+
+  delay(10); 
+
+} 
+
+ 
+
+ 
+
+void HOME_READY_STANCE(){ 
+
+  Serial.println("--- READY TO HOME ---"); 
+
+ 
+
+  //HOME LIMB1 
+
+  Serial.println("--- --- Home Limb 1?"); 
+
+  while (Serial.available()==0){} 
+
+  int prompt1 = Serial.parseInt(); 
+
+  Serial.println(prompt1); 
+
+  if (prompt1==1){ 
+
+    Serial.println(":::HOMING ABAD1:::"); 
+
+    pwm.writeMicroseconds(ABAD1, abhome1); 
+
+    delay(1500); 
+
+    Serial.println(":::ABAD1 AT HOME POSITION:::\n"); 
+
+    Serial.println(":::HOMING HIP1:::"); 
+
+    pwm.writeMicroseconds(HIP1, hiphome1+(_DEGTOMS_*45)); 
+
+    delay(1500); 
+
+    Serial.println(":::HIP1 AT HOME POSITION:::\n"); 
+
+    Serial.println(":::HOMING KNEE1:::"); 
+
+    pwm.writeMicroseconds(KNEE1, kneehome1-2*(_DEGTOMS_*45)); 
+
+    delay(1500); 
+
+    Serial.println(":::KNEE1 AT HOME POSITION:::\n\n"); 
+
+  } 
+
+  else{} 
+
+  delay(h_delay); 
+
+ 
+
+ 
+
+  while (Serial.available()==0){} 
+
+  p_prompt = Serial.parseInt(); 
+
+  //HOME LIMB2 
+
+  Serial.println("--- --- Home Limb 2?"); 
+
+  while (Serial.available()==0){} 
+
+  int prompt2 = Serial.parseInt(); 
+
+  Serial.println(prompt2); 
+
+  if (prompt2==1){ 
+
+    Serial.println(":::HOMING ABAD2:::"); 
+
+    pwm.writeMicroseconds(ABAD2, abhome2); 
+
+    delay(1500); 
+
+    Serial.println(":::ABAD2 AT HOME POSITION:::\n"); 
+
+    Serial.println(":::HOMING HIP2:::"); 
+
+    pwm.writeMicroseconds(HIP2, hiphome2-(_DEGTOMS_*45)); 
+
+    delay(1500); 
+
+    Serial.println(":::HIP2 AT HOME POSITION:::\n");    
+
+    Serial.println(":::HOMING KNEE2:::"); 
+
+    pwm.writeMicroseconds(KNEE2, kneehome2+2*(_DEGTOMS_*45)); 
+
+    delay(1500); 
+
+    Serial.println(":::KNEE2 AT HOME POSITION:::\n\n"); 
+
+  } 
+
+  else{} 
+
+  delay(h_delay); 
+
+ 
+
+ 
+
+  while (Serial.available()==0){} 
+
+  p_prompt = Serial.parseInt(); 
+
+  //HOME LIMB3 
+
+  Serial.println("--- --- Home Limb 3?"); 
+
+  while (Serial.available()==0){} 
+
+  int prompt3 = Serial.parseInt(); 
+
+  Serial.println(prompt3); 
+
+  if (prompt3==1){ 
+
+    Serial.println(":::HOMING ABAD3:::"); 
+
+    pwm.writeMicroseconds(ABAD3, abhome3); 
+
+    delay(1500); 
+
+    Serial.println(":::ABAD3 AT HOME POSITION:::\n"); 
+
+    Serial.println(":::HOMING HIP3:::"); 
+
+    pwm.writeMicroseconds(HIP3, hiphome3+(_DEGTOMS_*45)); 
+
+    delay(1500); 
+
+    Serial.println(":::HIP3 AT HOME POSITION:::\n"); 
+
+    Serial.println(":::HOMING KNEE3:::"); 
+
+    pwm.writeMicroseconds(KNEE3, kneehome3-2*(_DEGTOMS_*45)); 
+
+    delay(1500); 
+
+    Serial.println(":::KNEE3 AT HOME POSITION:::\n\n"); 
+
+  } 
+
+  else{} 
+
+  delay(h_delay); 
+
+ 
+
+ 
+
+  while (Serial.available()==0){} 
+
+  p_prompt = Serial.parseInt(); 
+
+  //HOME LIMB4 
+
+  Serial.println("--- --- Home Limb 4?"); 
+
+  while (Serial.available()==0){} 
+
+  int prompt4 = Serial.parseInt(); 
+
+  Serial.println(prompt4); 
+
+  if (prompt4==1){ 
+
+    Serial.println(":::HOMING ABAD4:::"); 
+
+    pwm.writeMicroseconds(ABAD4, abhome4); 
+
+    delay(1500); 
+
+    Serial.println(":::ABAD4 AT HOME POSITION:::\n"); 
+
+    Serial.println(":::HOMING HIP4:::"); 
+
+    pwm.writeMicroseconds(HIP4, hiphome4-(_DEGTOMS_*45)); 
+
+    delay(1500); 
+
+    Serial.println(":::HIP4 AT HOME POSITION:::\n"); 
+
+    Serial.println(":::HOMING KNEE4:::"); 
+
+    pwm.writeMicroseconds(KNEE4, kneehome4+2*(_DEGTOMS_*45)); 
+
+    delay(1500); 
+
+    Serial.println(":::KNEE4 AT HOME POSITION:::\n\n"); 
+
+  } 
+
+  else{} 
+
+  delay(h_delay); 
+
+} 
+
+ 
+
+ 
+
+void HOME_TT_ALL(){ 
+
+  pwm.writeMicroseconds(ABAD1, abhome1); 
+
+  pwm.writeMicroseconds(HIP1, hiphome1); 
+
+  pwm.writeMicroseconds(KNEE1, kneehome1); 
+
+ 
+
+  pwm.writeMicroseconds(ABAD2, abhome2); 
+
+  pwm.writeMicroseconds(HIP2, hiphome2); 
+
+  pwm.writeMicroseconds(KNEE2, kneehome2); 
+
+ 
+
+  pwm.writeMicroseconds(ABAD3, abhome3); 
+
+  pwm.writeMicroseconds(HIP3, hiphome3); 
+
+  pwm.writeMicroseconds(KNEE3, kneehome3); 
+
+ 
+
+  pwm.writeMicroseconds(ABAD4, abhome4); 
+
+  pwm.writeMicroseconds(HIP4, hiphome4); 
+
+  pwm.writeMicroseconds(KNEE4, kneehome4); 
+
+  delay(500); 
+
+} 
+
+ 
+
+void HOME_READY_STANCE_ALL(int stance_deg){ 
+
+  pwm.writeMicroseconds(ABAD1, abhome1); 
+
+  pwm.writeMicroseconds(HIP1, hiphome1+(_DEGTOMS_*stance_deg)); 
+
+  pwm.writeMicroseconds(KNEE1, kneehome1-2*(_DEGTOMS_*stance_deg)); 
+
+ 
+
+  pwm.writeMicroseconds(ABAD2, abhome2); 
+
+  pwm.writeMicroseconds(HIP2, hiphome2-(_DEGTOMS_*stance_deg)); 
+
+  pwm.writeMicroseconds(KNEE2, kneehome2+2*(_DEGTOMS_*stance_deg)); 
+
+ 
+
+  pwm.writeMicroseconds(ABAD3, abhome3); 
+
+  pwm.writeMicroseconds(HIP3, hiphome3+(_DEGTOMS_*stance_deg)); 
+
+  pwm.writeMicroseconds(KNEE3, kneehome3-2*(_DEGTOMS_*stance_deg)); 
+
+ 
+
+  pwm.writeMicroseconds(ABAD4, abhome4); 
+
+  pwm.writeMicroseconds(HIP4, hiphome4-(_DEGTOMS_*stance_deg)); 
+
+  pwm.writeMicroseconds(KNEE4, kneehome4+2*(_DEGTOMS_*stance_deg)); 
+
+  delay(500); 
+
+} 
+
+ 
+
+void STAND_FROM_READY_STANCE(int rise_deg){ 
+
+  pwm.writeMicroseconds(ABAD1, abhome1); 
+
+  pwm.writeMicroseconds(HIP1, hiphome1+(_DEGTOMS_*rise_deg)); 
+
+  pwm.writeMicroseconds(KNEE1, kneehome1-2*(_DEGTOMS_*rise_deg)); 
+
+ 
+
+  pwm.writeMicroseconds(ABAD2, abhome2); 
+
+  pwm.writeMicroseconds(HIP2, hiphome2-(_DEGTOMS_*rise_deg)); 
+
+  pwm.writeMicroseconds(KNEE2, kneehome2+2*(_DEGTOMS_*rise_deg)); 
+
+ 
+
+  pwm.writeMicroseconds(ABAD3, abhome3); 
+
+  pwm.writeMicroseconds(HIP3, hiphome3+(_DEGTOMS_*rise_deg)); 
+
+  pwm.writeMicroseconds(KNEE3, kneehome3-2*(_DEGTOMS_*rise_deg)); 
+
+ 
+
+  pwm.writeMicroseconds(ABAD4, abhome4); 
+
+  pwm.writeMicroseconds(HIP4, hiphome4-(_DEGTOMS_*rise_deg)); 
+
+  pwm.writeMicroseconds(KNEE4, kneehome4+2*(_DEGTOMS_*rise_deg)); 
+
+  delay(500); 
+
+} 
+
+ 
+
+ 
+
+void AIR_TROT(int trot_delay, int rise_deg, int fall_deg){ 
+
+  pwm.writeMicroseconds(ABAD1, abhome1); 
+
+  pwm.writeMicroseconds(HIP1, hiphome1+(_DEGTOMS_*rise_deg)); 
+
+  pwm.writeMicroseconds(KNEE1, kneehome1-2*(_DEGTOMS_*rise_deg)); 
+
+  pwm.writeMicroseconds(ABAD4, abhome4); 
+
+  pwm.writeMicroseconds(HIP4, hiphome4-(_DEGTOMS_*rise_deg)); 
+
+  pwm.writeMicroseconds(KNEE4, kneehome4+2*(_DEGTOMS_*rise_deg)); 
+
+ 
+
+  pwm.writeMicroseconds(ABAD2, abhome2); 
+
+  pwm.writeMicroseconds(HIP2, hiphome2-(_DEGTOMS_*fall_deg)); 
+
+  pwm.writeMicroseconds(KNEE2, kneehome2+2*(_DEGTOMS_*fall_deg)); 
+
+  pwm.writeMicroseconds(ABAD3, abhome3); 
+
+  pwm.writeMicroseconds(HIP3, hiphome3+(_DEGTOMS_*fall_deg)); 
+
+  pwm.writeMicroseconds(KNEE3, kneehome3-2*(_DEGTOMS_*fall_deg)); 
+
+ 
+
+  delay(trot_delay); 
+
+ 
+
+ 
+
+  pwm.writeMicroseconds(ABAD1, abhome1); 
+
+  pwm.writeMicroseconds(HIP1, hiphome1+(_DEGTOMS_*fall_deg)); 
+
+  pwm.writeMicroseconds(KNEE1, kneehome1-2*(_DEGTOMS_*fall_deg)); 
+
+  pwm.writeMicroseconds(ABAD4, abhome4); 
+
+  pwm.writeMicroseconds(HIP4, hiphome4-(_DEGTOMS_*fall_deg)); 
+
+  pwm.writeMicroseconds(KNEE4, kneehome4+2*(_DEGTOMS_*fall_deg)); 
+
+ 
+
+  pwm.writeMicroseconds(ABAD2, abhome2); 
+
+  pwm.writeMicroseconds(HIP2, hiphome2-(_DEGTOMS_*rise_deg)); 
+
+  pwm.writeMicroseconds(KNEE2, kneehome2+2*(_DEGTOMS_*rise_deg)); 
+
+  pwm.writeMicroseconds(ABAD3, abhome3); 
+
+  pwm.writeMicroseconds(HIP3, hiphome3+(_DEGTOMS_*rise_deg)); 
+
+  pwm.writeMicroseconds(KNEE3, kneehome3-2*(_DEGTOMS_*rise_deg)); 
+
+  delay(trot_delay); 
+
+ 
+
+} 
+
+ 
+
+void ABAD_FLEX(int ext_delay, int ext){ 
+
+  pwm.writeMicroseconds(ABAD1, abhome1); 
+
+  pwm.writeMicroseconds(ABAD4, abhome4); 
+
+  pwm.writeMicroseconds(ABAD2, abhome2); 
+
+  pwm.writeMicroseconds(ABAD3, abhome3); 
+
+  delay(ext_delay); 
+
+ 
+
+ 
+
+  pwm.writeMicroseconds(ABAD1, abhome1+_DEGTOMS_*ext); 
+
+  pwm.writeMicroseconds(ABAD4, abhome4+_DEGTOMS_*ext); 
+
+  pwm.writeMicroseconds(ABAD2, abhome2-_DEGTOMS_*ext); 
+
+  pwm.writeMicroseconds(ABAD3, abhome3-_DEGTOMS_*ext); 
+
+  delay(ext_delay); 
+
+ 
+
+  pwm.writeMicroseconds(ABAD1, abhome1); 
+
+  pwm.writeMicroseconds(ABAD4, abhome4); 
+
+  pwm.writeMicroseconds(ABAD2, abhome2); 
+
+  pwm.writeMicroseconds(ABAD3, abhome3); 
+
+  delay(ext_delay); 
+
+ 
+
+} 
+
+ 
+
+void loop() { 
+
+ 
+
+  // HOME_TT_ALL(); 
+
+  // delay(5000); 
+
+ 
+
+  HOME_READY_STANCE_ALL(50); 
+
+  delay(3000); 
+
+ 
+
+  ABAD_FLEX(2000, 30); 
+
+  delay(5000); 
+
+ 
+
+ STAND_FROM_READY_STANCE(5); 
+
+ delay(5000); 
+
+   
+
+  while (true){ 
+
+    AIR_TROT(500, 50, 30); 
+
+  } 
+
+ 
+
+} 
