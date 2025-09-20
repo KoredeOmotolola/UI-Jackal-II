@@ -1,3 +1,5 @@
+# Hardware
+
 This section contains the mechanical and electronic hardware resources for the UI Jackal II.
 
 ## Contents
@@ -6,3 +8,4 @@ This section contains the mechanical and electronic hardware resources for the U
 - **Wiring Diagrams** – electronics schematics for motor drivers, sensors, and controllers  
 
 These resources ensure the UI Jackal II remains affordable, modular, and replicable in resource-limited settings.
+
