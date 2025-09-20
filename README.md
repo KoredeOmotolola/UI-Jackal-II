@@ -10,6 +10,7 @@ While quadruped robotics research has advanced in North America, Europe, and Asi
 2. Hands-on opportunities in dynamic locomotion and robotics
 
 3. A foundation for local innovation and contribution to global robotics
+<img width="732" height="413" alt="image" src="https://github.com/user-attachments/assets/918e9ab0-f68f-4d6f-969e-78b65dd63139" />
 
 🛠 Problem Statement
 
