@@ -10,7 +10,6 @@ While quadruped robotics research has advanced in North America, Europe, and Asi
 2. Hands-on opportunities in dynamic locomotion and robotics
 
 3. A foundation for local innovation and contribution to global robotics
-<img width="732" height="413" alt="image" src="https://github.com/user-attachments/assets/918e9ab0-f68f-4d6f-969e-78b65dd63139" />
 
 🛠 Problem Statement
 
@@ -51,3 +50,9 @@ Challenges addressed by UI Jackal II include:
 3. Platform for experimentation in robotics and AI
 
 4. Designed to be replicable and extensible
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/d4504056-06ca-4331-8a2f-688aafc3ec91" />
+<img width="1324" height="739" alt="image" src="https://github.com/user-attachments/assets/279eba21-66c8-4180-b7bc-6d6bc10bc634" />
+<img width="732" height="413" alt="image" src="https://github.com/user-attachments/assets/845d27b1-c761-46c6-a3b6-fdab9a1931ea" />
+
+
