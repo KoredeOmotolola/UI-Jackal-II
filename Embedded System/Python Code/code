@@ -1,0 +1,176 @@
+# ui_jackal_ii_control.py
+"""
+UI Jackal II - Full Control Script
+- Controls 12 servos via PCA9685 (I2C)
+- Reads sensors: MPU6050 IMU, rotary encoders, touch sensors
+- Implements gait generation (trot gait)
+- Basic autonomous behavior: stops if any touch sensor is triggered
+"""
+
+import time
+import numpy as np
+import board
+import busio
+from adafruit_pca9685 import PCA9685
+import RPi.GPIO as GPIO
+from mpu6050 import mpu6050
+
+# -------------------------------
+# I2C and PCA9685 Setup
+# -------------------------------
+i2c_bus = busio.I2C(board.SCL, board.SDA)
+pca = PCA9685(i2c_bus)
+pca.frequency = 50  # Standard servo frequency
+
+# -------------------------------
+# Servo Mapping
+# -------------------------------
+servo_channels = {
+    "front_left_hip": 0,
+    "front_left_knee": 1,
+    "front_left_ankle": 2,
+    "front_right_hip": 3,
+    "front_right_knee": 4,
+    "front_right_ankle": 5,
+    "rear_left_hip": 6,
+    "rear_left_knee": 7,
+    "rear_left_ankle": 8,
+    "rear_right_hip": 9,
+    "rear_right_knee": 10,
+    "rear_right_ankle": 11
+}
+
+# -------------------------------
+# GPIO Setup for Touch Sensors
+# -------------------------------
+touch_pins = [17, 27]  # Example GPIO pins
+GPIO.setmode(GPIO.BCM)
+for pin in touch_pins:
+    GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+# -------------------------------
+# MPU6050 Setup
+# -------------------------------
+sensor = mpu6050(0x68)
+
+# -------------------------------
+# Rotary Encoder Setup
+# -------------------------------
+encoder_pins = {
+    "front_left_hip": 5,
+    "front_left_knee": 6,
+    "front_left_ankle": 13,
+    "front_right_hip": 19,
+    "front_right_knee": 26,
+    "front_right_ankle": 21,
+    "rear_left_hip": 20,
+    "rear_left_knee": 16,
+    "rear_left_ankle": 12,
+    "rear_right_hip": 25,
+    "rear_right_knee": 24,
+    "rear_right_ankle": 23
+}
+
+encoder_counts = {servo: 0 for servo in servo_channels.keys()}
+
+# -------------------------------
+# Servo Control Functions
+# -------------------------------
+def angle_to_pwm(angle):
+    """Convert angle (0-180 deg) to PCA9685 duty cycle"""
+    min_pwm = 150  # Adjust for calibration
+    max_pwm = 600
+    return int(min_pwm + (max_pwm - min_pwm) * (angle / 180.0))
+
+def set_servo_angle(servo_name, angle):
+    channel = servo_channels[servo_name]
+    pwm_value = angle_to_pwm(angle)
+    pca.channels[channel].duty_cycle = pwm_value
+
+def set_all_servos(angle_dict):
+    for servo, angle in angle_dict.items():
+        set_servo_angle(servo, angle)
+
+# -------------------------------
+# Sensor Reading Functions
+# -------------------------------
+def read_imu():
+    """Read IMU data"""
+    accel_data = sensor.get_accel_data()
+    gyro_data = sensor.get_gyro_data()
+    return {
+        "accel_x": accel_data["x"],
+        "accel_y": accel_data["y"],
+        "accel_z": accel_data["z"],
+        "gyro_x": gyro_data["x"],
+        "gyro_y": gyro_data["y"],
+        "gyro_z": gyro_data["z"]
+    }
+
+def read_encoders():
+    """Read encoder data"""
+    return encoder_counts
+
+def read_touch_sensors():
+    """Read touch sensors"""
+    return {f"touch_{i}": not GPIO.input(pin) for i, pin in enumerate(touch_pins)}
+
+# -------------------------------
+# Gait Generation
+# -------------------------------
+def trot_gait(timestep):
+    """Generates a trot gait using sine waves"""
+    amplitude = 30
+    offset = 90
+    gait_angles = {}
+    for i, servo in enumerate(servo_channels.keys()):
+        gait_angles[servo] = offset + amplitude * np.sin(2 * np.pi * timestep + i * np.pi / 6)
+    return gait_angles
+
+# -------------------------------
+# Autonomous Behavior
+# -------------------------------
+def check_obstacles(touch_data):
+    """Simple obstacle response: stop if touch sensor activated"""
+    return any(touch_data.values())
+
+# -------------------------------
+# Main Control Loop
+# -------------------------------
+def main():
+    timestep = 0.0
+    try:
+        while True:
+            # Read sensors
+            imu_data = read_imu()
+            encoder_data = read_encoders()
+            touch_data = read_touch_sensors()
+            
+            # Check for obstacles
+            if check_obstacles(touch_data):
+                print("Obstacle detected! Stopping.")
+                set_all_servos({servo: 90 for servo in servo_channels.keys()})
+                time.sleep(1)
+                continue
+
+            # Generate gait angles
+            angles = trot_gait(timestep)
+            set_all_servos(angles)
+
+            # Debug info
+            print(f"Timestep: {timestep:.2f}")
+            print(f"IMU: {imu_data}")
+            print(f"Encoders: {encoder_data}")
+            print(f"Touch Sensors: {touch_data}")
+
+            # Increment timestep
+            timestep += 0.05
+            time.sleep(0.05)
+
+    except KeyboardInterrupt:
+        print("Shutting down safely...")
+        set_all_servos({servo: 90 for servo in servo_channels.keys()})
+        GPIO.cleanup()
+
+if __name__ == "__main__":
+    main()
