@@ -1,0 +1,102 @@
+# jackal_ii_simulation.py
+"""
+Full Jackal II Simulation
+- Simulated servo control and gait
+- Sensor data (IMU, encoders, touch)
+- AI/ML decision-making for obstacle avoidance
+"""
+
+import time
+import numpy as np
+import random
+from sklearn.ensemble import RandomForestClassifier
+import joblib
+
+# -------------------------------
+# Servo / Gait Simulation
+# -------------------------------
+servo_channels = [
+    "front_left_hip", "front_left_knee", "front_left_ankle",
+    "front_right_hip", "front_right_knee", "front_right_ankle",
+    "rear_left_hip", "rear_left_knee", "rear_left_ankle",
+    "rear_right_hip", "rear_right_knee", "rear_right_ankle"
+]
+
+def trot_gait(timestep):
+    """Simulate trot gait angles (0-180)"""
+    amplitude = 30
+    offset = 90
+    gait_angles = {}
+    for i, servo in enumerate(servo_channels):
+        gait_angles[servo] = offset + amplitude * np.sin(2 * np.pi * timestep + i * np.pi / 6)
+    return gait_angles
+
+def apply_gait(angles):
+    """Simulate sending angles to servos"""
+    # In simulation, just print the angles for now
+    print("Servo Angles:", {k: int(v) for k,v in angles.items()})
+
+# -------------------------------
+# Simulated Sensors
+# -------------------------------
+def read_sensors():
+    """Return simulated IMU, encoders, touch"""
+    # Encoders
+    encoders = [random.randint(0,180) for _ in range(12)]
+    avg_encoder = sum(encoders)/len(encoders)
+    # IMU tilt
+    roll = random.uniform(-30,30)
+    pitch = random.uniform(-30,30)
+    tilt = np.sqrt(roll**2 + pitch**2)
+    # Touch sensors
+    touch_sensors = [random.random() < 0.1 for _ in range(2)]
+    touch_count = sum(touch_sensors)
+    features = [avg_encoder, tilt, touch_count]
+    return features, encoders, tilt, touch_sensors
+
+# -------------------------------
+# AI / ML Model for Obstacle Detection
+# -------------------------------
+# Generate training data based on the same simulation rules
+X_train = []
+y_train = []
+for _ in range(1000):
+    avg_encoder = random.uniform(0,180)
+    tilt = random.uniform(0,35)
+    touch_count = random.choice([0,1,2])
+    X_train.append([avg_encoder, tilt, touch_count])
+    y_train.append(1 if tilt>20 or touch_count>0 else 0)
+
+clf = RandomForestClassifier(n_estimators=50, random_state=42)
+clf.fit(X_train, y_train)
+joblib.dump(clf, "jackal_obstacle_model_sim.pkl")
+
+# -------------------------------
+# Main Simulation Loop
+# -------------------------------
+timestep = 0.0
+try:
+    while True:
+        # Read simulated sensors
+        features, encoders, tilt, touch_sensors = read_sensors()
+        
+        # AI Decision
+        prediction = clf.predict([features])[0]
+        decision = "Obstacle" if prediction==1 else "Free"
+        
+        # Apply gait only if path is free
+        if decision == "Free":
+            angles = trot_gait(timestep)
+            apply_gait(angles)
+        else:
+            print("Obstacle detected! Stopping robot.")
+        
+        # Print sensor and decision info
+        print(f"Timestep: {timestep:.2f} | Tilt: {tilt:.1f} | Touch: {touch_sensors} | Decision: {decision}")
+        
+        # Increment timestep
+        timestep += 0.05
+        time.sleep(0.1)
+
+except KeyboardInterrupt:
+    print("Simulation stopped safely.")
